@@ -729,6 +729,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     spdm_message_header_t *spdm_response;
     size_t response_capacity;
     libspdm_chunk_info_t *send_info;
+    bool response_from_chunk = false;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     if ((session_id != NULL) &&
@@ -757,6 +758,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                          send_info->large_message, send_info->large_message_size);
         *response_size = send_info->large_message_size;
         response_capacity = send_info->large_message_capacity;
+        response_from_chunk = true;
 
         /* This response may either be an actual response or ERROR_LARGE_RESPONSE,
          * the latter which should be handled in the large response handler. */
@@ -788,7 +790,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
         status = libspdm_handle_error_large_response(
             spdm_context, session_id,
-            response_size, (void *)spdm_response, response_capacity);
+            response_size, (void *)spdm_response, response_capacity, response_from_chunk);
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;

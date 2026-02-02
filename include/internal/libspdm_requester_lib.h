@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -107,6 +107,7 @@ libspdm_return_t libspdm_handle_error_response_main(
  *                                       On output, the large response size after being retrieved in chunks.
  * @param  response                      The error response on input. Large response on output.
  * @param  response_capacity             The maximum capacity of the response buffer.
+ * @param  response_from_chunk           Indicates the response message is from chunking mechanism or not.
  *
  * @retval libspdm_return_t              An error value or success.
  **/
@@ -115,7 +116,8 @@ libspdm_return_t libspdm_handle_error_large_response(
     const uint32_t* session_id,
     size_t* inout_response_size,
     void* inout_response,
-    size_t response_capacity);
+    size_t response_capacity,
+    bool response_from_chunk);
 
 /**
  * This function sends GET_VERSION and receives VERSION.

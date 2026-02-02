@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -211,7 +211,8 @@ libspdm_return_t libspdm_handle_error_large_response(
     const uint32_t *session_id,
     size_t *inout_response_size,
     void *inout_response,
-    size_t response_capacity)
+    size_t response_capacity,
+    bool response_from_chunk)
 {
     libspdm_return_t status;
     uint8_t chunk_handle;
@@ -236,6 +237,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     size_t large_response_size;
     size_t large_response_size_so_far;
     uint64_t max_chunk_data_transfer_size;
+    size_t min_large_response_size;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -389,7 +391,20 @@ libspdm_return_t libspdm_handle_error_large_response(
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
-            if (large_response_size <= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
+            if (response_from_chunk) {
+                /* If the Responder's DataTransferSize is approximately equal to MinDataTransferSize
+                * then Responder may chunk a message whose size is less than MinDataTransferSize. */
+                if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14){
+                    min_large_response_size = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 -
+                                              sizeof(spdm_chunk_send_ack_response_14_t);
+                } else {
+                    min_large_response_size = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 -
+                                              sizeof(spdm_chunk_send_ack_response_t);
+                }
+            } else {
+                min_large_response_size = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
+            }
+            if (large_response_size <= min_large_response_size) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
