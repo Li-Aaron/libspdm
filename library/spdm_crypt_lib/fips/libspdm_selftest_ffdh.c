@@ -96,15 +96,6 @@ bool libspdm_fips_selftest_ffdh(void *fips_selftest_context)
         goto update;
     }
 
-    /*self_test*/
-    if (ff_key1_length != ff_key2_length) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "FFDH self_test failed \n"));
-        libspdm_dh_free(dh1);
-        libspdm_dh_free(dh2);
-        result = false;
-        goto update;
-    }
-
     if (!libspdm_consttime_is_mem_equal(ff_key1, ff_key2, ff_key1_length)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "FFDH self_test failed \n"));
         libspdm_dh_free(dh1);
