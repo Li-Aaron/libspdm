@@ -10,22 +10,22 @@
 
 #if LIBSPDM_FIPS_MODE
 
-bool libspdm_fips_selftest_hmac_sha256(void *fips_selftest_context)
+void libspdm_fips_selftest_hmac_sha256(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA256_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA256_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256) != 0) {
-        return true;
+        return;
     }
 
     const uint8_t key[32] = {0};
@@ -64,26 +64,24 @@ update:
     }
 
 #endif/*LIBSPDM_SHA256_SUPPORT*/
-
-    return result;
 }
 
-bool libspdm_fips_selftest_hmac_sha384(void *fips_selftest_context)
+void libspdm_fips_selftest_hmac_sha384(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA384_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA384_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384) != 0) {
-        return true;
+        return;
     }
 
     const uint8_t key[32] = {0};
@@ -124,26 +122,24 @@ update:
     }
 
 #endif/*LIBSPDM_SHA384_SUPPORT*/
-
-    return result;
 }
 
-bool libspdm_fips_selftest_hmac_sha512(void *fips_selftest_context)
+void libspdm_fips_selftest_hmac_sha512(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA512_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA512_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512) != 0) {
-        return true;
+        return;
     }
 
     const uint8_t key[32] = {0};
@@ -185,8 +181,6 @@ update:
     }
 
 #endif/*LIBSPDM_SHA512_SUPPORT*/
-
-    return result;
 }
 
 #endif/*LIBSPDM_FIPS_MODE*/

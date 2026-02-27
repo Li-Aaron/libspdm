@@ -10,25 +10,26 @@
 
 #if LIBSPDM_FIPS_MODE
 
-bool libspdm_fips_selftest_sha256(void *fips_selftest_context)
+void libspdm_fips_selftest_sha256(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA256_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA256_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA256) != 0) {
-        return true;
+        return;
     }
 
-    result = libspdm_fips_selftest_hmac_sha256(context);
+    libspdm_fips_selftest_hmac_sha256(context);
+    result = (context->self_test_result & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256) != 0;
 
     /* mark it as tested*/
     context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA256;
@@ -40,29 +41,28 @@ bool libspdm_fips_selftest_sha256(void *fips_selftest_context)
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA256;
     }
 #endif /*LIBSPDM_SHA256_SUPPORT*/
-
-    return result;
 }
 
-bool libspdm_fips_selftest_sha384(void *fips_selftest_context)
+void libspdm_fips_selftest_sha384(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA384_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA384_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA384) != 0) {
-        return true;
+        return;
     }
 
-    result = libspdm_fips_selftest_hmac_sha384(context);
+    libspdm_fips_selftest_hmac_sha384(context);
+    result = (context->self_test_result & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384) != 0;
 
     /* mark it as tested*/
     context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA384;
@@ -74,29 +74,28 @@ bool libspdm_fips_selftest_sha384(void *fips_selftest_context)
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA384;
     }
 #endif /*LIBSPDM_SHA384_SUPPORT*/
-
-    return result;
 }
 
-bool libspdm_fips_selftest_sha512(void *fips_selftest_context)
+void libspdm_fips_selftest_sha512(void *fips_selftest_context)
 {
+#if LIBSPDM_SHA512_SUPPORT
     bool result = true;
 
-#if LIBSPDM_SHA512_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA512) != 0) {
-        return true;
+        return;
     }
 
-    result = libspdm_fips_selftest_hmac_sha512(context);
+    libspdm_fips_selftest_hmac_sha512(context);
+    result = (context->self_test_result & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512) != 0;
 
     /* mark it as tested*/
     context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA512;
@@ -108,8 +107,6 @@ bool libspdm_fips_selftest_sha512(void *fips_selftest_context)
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA512;
     }
 #endif /*LIBSPDM_SHA512_SUPPORT*/
-
-    return result;
 }
 
 #endif/*LIBSPDM_FIPS_MODE*/

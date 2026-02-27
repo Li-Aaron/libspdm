@@ -11,22 +11,22 @@
 
 #if LIBSPDM_FIPS_MODE
 
-bool libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
+void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
 {
+#if LIBSPDM_RSA_PSS_SUPPORT
     bool result = true;
 
-#if LIBSPDM_RSA_PSS_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_RSA_PSS) != 0) {
-        return true;
+        return;
     }
 
     uint8_t signature[512];
@@ -122,7 +122,7 @@ bool libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
     result = libspdm_sha256_hash_all(kat_tbs, sizeof(kat_tbs) - 1, digest);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Hash sha256 failed \n"));
-        return false;
+        goto update;
     }
 
     rsa = libspdm_rsa_new();
@@ -199,8 +199,6 @@ update:
     }
 
 #endif/*LIBSPDM_RSA_PSS_SUPPORT*/
-
-    return result;
 }
 
 #endif

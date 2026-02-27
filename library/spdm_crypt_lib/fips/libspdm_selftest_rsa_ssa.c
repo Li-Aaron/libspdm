@@ -10,22 +10,22 @@
 
 #if LIBSPDM_FIPS_MODE
 
-bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
+void libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 {
+#if LIBSPDM_RSA_SSA_SUPPORT
     bool result = true;
 
-#if LIBSPDM_RSA_SSA_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_RSA_SSA) != 0) {
-        return true;
+        return;
     }
 
     uint8_t signature[1024];
@@ -232,8 +232,6 @@ update:
     }
 
 #endif/*LIBSPDM_RSA_SSA_SUPPORT*/
-
-    return result;
 }
 
 #endif

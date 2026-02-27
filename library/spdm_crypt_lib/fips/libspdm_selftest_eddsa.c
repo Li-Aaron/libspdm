@@ -10,22 +10,22 @@
 
 #if LIBSPDM_FIPS_MODE
 
-bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
+void libspdm_fips_selftest_eddsa(void *fips_selftest_context)
 {
+#if LIBSPDM_EDDSA_SUPPORT
     bool result = true;
 
-#if LIBSPDM_EDDSA_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_EDDSA) != 0) {
-        return true;
+        return;
     }
 
 #if LIBSPDM_EDDSA_ED25519_SUPPORT
@@ -267,7 +267,6 @@ update:
     }
 
 #endif /* LIBSPDM_EDDSA_SUPPORT */
-    return result;
 }
 
 #endif/*LIBSPDM_FIPS_MODE*/

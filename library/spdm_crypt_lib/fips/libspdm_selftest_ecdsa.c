@@ -25,22 +25,22 @@ static int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *
     return 0;
 }
 
-bool libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
+void libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
 {
+#if LIBSPDM_ECDSA_SUPPORT
     bool result = true;
 
-#if LIBSPDM_ECDSA_SUPPORT
     libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
     if (context->tested_algo != context->self_test_result) {
-        return false;
+        return;
     }
 
     /* check if run before.*/
     if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_ECDSA) != 0) {
-        return true;
+        return;
     }
 
     uint8_t signature[32 * 2];
@@ -164,8 +164,6 @@ update:
     }
 
 #endif/*LIBSPDM_ECDSA_SUPPORT*/
-
-    return result;
 }
 
 #endif/*LIBSPDM_FIPS_MODE*/
